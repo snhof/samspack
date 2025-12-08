@@ -39,6 +39,7 @@ VFQ_scoring <- function(df) {
     ) %>%
     dplyr::mutate(
       # Extract single columns directly without rowwise()
+      # Note: [[1]] indexing is safe here as regex patterns match exactly one column
       VFQ_general_health = dplyr::pick(dplyr::matches("VFQ1(?!\\d)", perl = TRUE))[[1]],
       VFQ_general_vision = dplyr::pick(dplyr::matches("VFQ2(?!\\d)", perl = TRUE))[[1]],
       VFQ_color_vision = dplyr::pick(dplyr::contains("VFQ12"))[[1]],
@@ -47,6 +48,7 @@ VFQ_scoring <- function(df) {
     dplyr::rowwise() %>%
     dplyr::mutate(
       # Use rowwise only for row-level means
+      # Using [[1]] for single column extraction (patterns designed to match one column)
       VFQ_ocular_pain = mean(c(dplyr::pick(dplyr::contains("VFQ4"))[[1]], dplyr::pick(dplyr::contains("VFQ19"))[[1]]), na.rm = TRUE),
       VFQ_near_activities = mean(c(
         dplyr::pick(dplyr::contains("VFQ5"))[[1]],
