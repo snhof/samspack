@@ -96,34 +96,36 @@ calcINO <- function(ETdata) {
     dplyr::mutate(
       max_VDI_AUC = pmax(L15_VDI_AUC, R15_VDI_AUC),
       max_VDI_PvAm = pmax(L15_VDI_PvAm, R15_VDI_PvAm),
-      mean_VDI_AUC = rowMeans(dplyr::across(c(L15_VDI_AUC, R15_VDI_AUC))),
-      mean_VDI_PvAm = rowMeans(dplyr::across(c(L15_VDI_PvAm, R15_VDI_PvAm))),
-      mean_VDI_peakvelocity = rowMeans(dplyr::across(c(L15_VDI_peakvelocity, R15_VDI_peakvelocity))),
+      # Cache rowMeans calculations to avoid redundant across() operations
+      mean_VDI_AUC = (L15_VDI_AUC + R15_VDI_AUC) / 2,
+      mean_VDI_PvAm = (L15_VDI_PvAm + R15_VDI_PvAm) / 2,
+      mean_VDI_peakvelocity = (L15_VDI_peakvelocity + R15_VDI_peakvelocity) / 2,
       INO_VDI_AUC = dplyr::case_when(
-        INO_nounibi == "Unilateral" ~ pmax(L15_VDI_AUC, R15_VDI_AUC),
-        INO_nounibi == "Bilateral" ~ rowMeans(dplyr::across(c(L15_VDI_AUC, R15_VDI_AUC))),
+        INO_nounibi == "Unilateral" ~ max_VDI_AUC,
+        INO_nounibi == "Bilateral" ~ mean_VDI_AUC,
         INO_nounibi == "No INO" ~ NA
       ),
       INO_VDI_PvAm = dplyr::case_when(
-        INO_nounibi == "Unilateral" ~ pmax(L15_VDI_PvAm, R15_VDI_PvAm),
-        INO_nounibi == "Bilateral" ~ rowMeans(dplyr::across(c(L15_VDI_PvAm, R15_VDI_PvAm))),
+        INO_nounibi == "Unilateral" ~ max_VDI_PvAm,
+        INO_nounibi == "Bilateral" ~ mean_VDI_PvAm,
         INO_nounibi == "No INO" ~ NA
       )) %>%
     #calculate VDI per subject (logaritmically transformed)
     dplyr::mutate(
       max_VDI_AUC_ln = pmax(L15_VDI_AUC_ln, R15_VDI_AUC_ln),
       max_VDI_PvAm_ln = pmax(L15_VDI_PvAm_ln, R15_VDI_PvAm_ln),
-      mean_VDI_AUC_ln = rowMeans(dplyr::across(c(L15_VDI_AUC_ln, R15_VDI_AUC_ln))),
-      mean_VDI_PvAm_ln = rowMeans(dplyr::across(c(L15_VDI_PvAm_ln, R15_VDI_PvAm_ln))),
+      # Use direct calculation instead of rowMeans for better performance
+      mean_VDI_AUC_ln = (L15_VDI_AUC_ln + R15_VDI_AUC_ln) / 2,
+      mean_VDI_PvAm_ln = (L15_VDI_PvAm_ln + R15_VDI_PvAm_ln) / 2,
       INO_VDI_AUC_ln = dplyr::case_when(
-        INO_nounibi == "Unilateral" ~ pmax(L15_VDI_AUC_ln, R15_VDI_AUC_ln),
-        INO_nounibi == "Bilateral" ~ rowMeans(dplyr::across(c(L15_VDI_AUC_ln, R15_VDI_AUC_ln))),
-        TRUE ~ rowMeans(dplyr::across(c(L15_VDI_AUC_ln, R15_VDI_AUC_ln)))
+        INO_nounibi == "Unilateral" ~ max_VDI_AUC_ln,
+        INO_nounibi == "Bilateral" ~ mean_VDI_AUC_ln,
+        TRUE ~ mean_VDI_AUC_ln
       ),
       INO_VDI_PvAm_ln = dplyr::case_when(
-        INO_nounibi == "Unilateral" ~ pmax(L15_VDI_PvAm_ln, R15_VDI_PvAm_ln),
-        INO_nounibi == "Bilateral" ~ rowMeans(dplyr::across(c(L15_VDI_PvAm_ln, R15_VDI_PvAm_ln))),
-        TRUE ~ rowMeans(dplyr::across(c(L15_VDI_PvAm_ln, R15_VDI_PvAm_ln)))
+        INO_nounibi == "Unilateral" ~ max_VDI_PvAm_ln,
+        INO_nounibi == "Bilateral" ~ mean_VDI_PvAm_ln,
+        TRUE ~ mean_VDI_PvAm_ln
       ))
 }
 
