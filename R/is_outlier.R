@@ -11,5 +11,11 @@
 #' data_vector <- c(10, 12, 14, 15, 18, 20, 22, 100)
 #' is_outlier(data_vector)
 is_outlier <- function(x) {
-  x < stats::quantile(x, .25, na.rm = TRUE) - 1.5*stats::IQR(x, na.rm = TRUE) | x > stats::quantile(x, .75, na.rm = TRUE) + 1.5*stats::IQR(x, na.rm = TRUE)
+  # Calculate quartiles and IQR once to avoid redundant computations
+  q <- stats::quantile(x, c(.25, .75), na.rm = TRUE)
+  iqr <- q[2] - q[1]
+  lower_bound <- q[1] - 1.5 * iqr
+  upper_bound <- q[2] + 1.5 * iqr
+  
+  x < lower_bound | x > upper_bound
 }

@@ -37,47 +37,51 @@ VFQ_scoring <- function(df) {
       dplyr::across(dplyr::contains(c("VFQ17", "VFQ18", "VFQ19", "VFQ20", "VFQ21", "VFQ22", "VFQ23", "VFQ24", "VFQ25")),
              ~dplyr::case_match(.x, 1 ~ 0, 2 ~ 25, 3 ~ 50, 4 ~ 75, 5 ~ 100))
     ) %>%
+    dplyr::mutate(
+      # Extract single columns directly without rowwise()
+      VFQ_general_health = dplyr::pick(dplyr::matches("VFQ1(?!\\d)", perl = TRUE))[[1]],
+      VFQ_general_vision = dplyr::pick(dplyr::matches("VFQ2(?!\\d)", perl = TRUE))[[1]],
+      VFQ_color_vision = dplyr::pick(dplyr::contains("VFQ12"))[[1]],
+      VFQ_peripheral_vision = dplyr::pick(dplyr::contains("VFQ10"))[[1]]
+    ) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
-      VFQ_general_health = dplyr::pull(dplyr::pick(dplyr::matches("VFQ1(?!\\d)", perl = TRUE))),
-      VFQ_general_vision = dplyr::pull(dplyr::pick(dplyr::matches("VFQ2(?!\\d)", perl = TRUE))),
-      VFQ_ocular_pain = mean(c(dplyr::pull(dplyr::pick(dplyr::contains("VFQ4"))), dplyr::pull(dplyr::pick(dplyr::contains("VFQ19")))), na.rm = TRUE),
+      # Use rowwise only for row-level means
+      VFQ_ocular_pain = mean(c(dplyr::pick(dplyr::contains("VFQ4"))[[1]], dplyr::pick(dplyr::contains("VFQ19"))[[1]]), na.rm = TRUE),
       VFQ_near_activities = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ5"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ6"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ7")))
+        dplyr::pick(dplyr::contains("VFQ5"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ6"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ7"))[[1]]
       ), na.rm = TRUE),
       VFQ_distance_activities = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ8"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ9"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ14")))
+        dplyr::pick(dplyr::contains("VFQ8"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ9"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ14"))[[1]]
       ), na.rm = TRUE),
       VFQ_social_functioning = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ11"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ13")))
+        dplyr::pick(dplyr::contains("VFQ11"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ13"))[[1]]
       ), na.rm = TRUE),
       VFQ_mental_health = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ3"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ21"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ22"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ25")))
+        dplyr::pick(dplyr::contains("VFQ3"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ21"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ22"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ25"))[[1]]
       ), na.rm = TRUE),
       VFQ_role_difficulties = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ17"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ18")))
+        dplyr::pick(dplyr::contains("VFQ17"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ18"))[[1]]
       ), na.rm = TRUE),
       VFQ_dependency = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ20"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ23"))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ24")))
+        dplyr::pick(dplyr::contains("VFQ20"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ23"))[[1]],
+        dplyr::pick(dplyr::contains("VFQ24"))[[1]]
       ), na.rm = TRUE),
       VFQ_driving = mean(c(
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ15c"))),
-        dplyr::pull(dplyr::pick(dplyr::matches("VFQ16(?!a)", perl = TRUE))),
-        dplyr::pull(dplyr::pick(dplyr::contains("VFQ16a")))
+        dplyr::pick(dplyr::contains("VFQ15c"))[[1]],
+        dplyr::pick(dplyr::matches("VFQ16(?!a)", perl = TRUE))[[1]],
+        dplyr::pick(dplyr::contains("VFQ16a"))[[1]]
       ), na.rm = TRUE),
-      VFQ_color_vision = dplyr::pull(dplyr::pick(dplyr::contains("VFQ12"))),
-      VFQ_peripheral_vision = dplyr::pull(dplyr::pick(dplyr::contains("VFQ10"))),
       VFQ_total = mean(c(
         VFQ_general_vision,
         VFQ_ocular_pain,
