@@ -1,0 +1,37 @@
+Package: samspack
+Type: Package
+Title: Sam's personal collection of functions
+Version: 1.0.1
+Authors@R: c(
+    person(
+      "Sam", "Hof",
+      email = "s.n.hof@amsterdamumc.nl",
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0002-0453-6449")
+    )
+  )
+Description: Sam's personal collection of functions for data analysis of eye-tracking data and multiple sclerosis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    broom,
+    broom.mixed,
+    dplyr,
+    geepack,
+    ggplot2,
+    ggpubr,
+    ggrepel,
+    lme4,
+    lmerTest,
+    magrittr,
+    purrr,
+    rlang,
+    stats,
+    stringr,
+    tidyr,
+    utils
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 3.5)
