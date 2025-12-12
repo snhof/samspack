@@ -4,17 +4,27 @@
 \alias{lm_mult_f2m}
 \title{lm_mult_f2m: Formula dataframe to dataframe with linear regression models}
 \usage{
-lm_mult_f2m(df_formulas, data, progress = FALSE)
+lm_mult_f2m(
+  df_formulas,
+  data,
+  std_models = FALSE,
+  progress = FALSE,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{df_formulas}{Dataframe containing regression formulas in a column named 'formula', created with \code{\link[=construct_formulas]{construct_formulas()}}.}
 
 \item{data}{dataframe where each row represents an observation of the outcome variable.}
 
+\item{std_models}{Do you want to run standardized versions of the models as well? Default is FALSE.}
+
 \item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
+
+\item{quiet}{Whether to suppress error messages from model fitting. Default is FALSE. Error messages are always captured and stored in the output dataframe.}
 }
 \value{
-Datafram provided as "df_formulas" with appended columns containing linear regression models.
+Dataframe provided as "df_formulas" with appended columns containing linear regression models and error messages.
 }
 \description{
 Run and append linear regression models based on a formula dataframe created with \code{\link[=construct_formulas]{construct_formulas()}}.
