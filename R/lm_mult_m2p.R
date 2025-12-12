@@ -24,8 +24,8 @@ lm_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
   # run a lineair model and iterate through each formula
   df_reg %>%
     dplyr::mutate(
-      across(
-        any_of(c("model", "std_model")),
+      dplyr::across(
+        dplyr::any_of(c("model", "std_model")),
         ~ifelse(
           is.na(.x),
           .x,
@@ -41,7 +41,7 @@ lm_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
       )
     ) %>%
     # unnest each model so all models form a single table
-    tidyr::unnest(col = any_of(c(c("model", "std_model"))), keep_empty = TRUE, names_sep = "_") %>%
+    tidyr::unnest(col = dplyr::any_of(c(c("model", "std_model"))), keep_empty = TRUE, names_sep = "_") %>%
     dplyr::select(-(dplyr::starts_with("std_model")&!dplyr::ends_with("estimate"))) %>%
     dplyr::rename_with(~stringr::str_remove(.x, "model_")) %>%
     dplyr::mutate(
