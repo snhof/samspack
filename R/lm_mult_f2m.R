@@ -18,10 +18,7 @@
 #' covariates = c("", "+ gender")
 #' )
 #'
-#' lm_mult_f2m(
-#' df_formulas = df_formulas,
-#' data = MS_trial_data
-#' )
+#' lm_mult_f2m(df_formulas, data = MS_trial_data)
 #'
 lm_mult_f2m <- function(df_formulas, data, std_models = FALSE, progress = FALSE, quiet = FALSE) {
   # run a lineair model for each formula

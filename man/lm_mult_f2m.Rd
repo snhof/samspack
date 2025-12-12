@@ -36,9 +36,6 @@ predictors = "age",
 covariates = c("", "+ gender")
 )
 
-lm_mult_f2m(
-df_formulas = df_formulas,
-data = MS_trial_data
-)
+lm_mult_f2m(df_formulas, data = MS_trial_data)
 
 }
