@@ -1,37 +1,49 @@
-lm_mult_m2p <- function(df_reg, std_beta = FALSE, progress = FALSE, data = NULL) {
+#' lm_mult_m2p: Extract parameters from multiple linear models in a dataframe into a tidy table
+#'
+#' @inheritParams lm_mult
+#' @param df_reg Dataframe containing multiple linear models in a column named 'model' and, optionally standardized models in a column named "std_model". This dataframe can be created with [lm_mult_f2m()].
+#' @param exp_log Do you want to exponentiate the results for log transformed outcomes, set this to TRUE. Default is FALSE.
+#' @param progress Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.
+#'
+#' @returns Dataframe with results from multiple linear regression analyses.
+#' @export
+#'
+#' @examples
+#' df_formulas <- construct_formulas(
+#' outcomes = c("EDSS", "SDMT"),
+#' predictors = "age",
+#' covariates = c("", "+ gender")
+#' )
+#'
+#' df_reg <- lm_mult_f2m(df_formulas, data = MS_trial_data)
+#'
+#' lm_mult_m2p(df_reg)
+#'
+#'
+lm_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
   # run a lineair model and iterate through each formula
   df_reg %>%
     dplyr::mutate(
-      #Put regression results into tidy data frame
-      model_result = purrr::map(model_result, .f = purrr::possibly(~broom::tidy(.x, conf.int = TRUE)), .progress = ifelse(progress, "Extracting parameters from models", FALSE))
+      across(
+        any_of(c("model", "std_model")),
+        ~ifelse(
+          is.na(.x),
+          .x,
+          purrr::map(
+            .x,
+            .f = purrr::possibly(
+              ~broom::tidy(.x, conf.int = TRUE),
+              quiet = FALSE
+            ),
+            .progress = ifelse(progress, "Extracting parameters from models", FALSE)
+          )
+        )
+      )
     ) %>%
     # unnest each model so all models form a single table
-    tidyr::unnest(col = model_result) -> df_reg
-
-  if(std_beta == TRUE){
-    # generate additional dataframe with standardized regressions and append to normal regressions
-    df_reg %>% dplyr::left_join(
-      df_reg %>%
-        dplyr::mutate(
-          # extract variables used in regression formula
-          std_vars = stringr::str_extract_all(formula, "([^ \\(\\)\\*\\+~\\|]+)"),
-          #filter dataset for used variables, drop rows containing NA and standardize all numerical variables. Be careful with numeric subject numbers, these will also be standardized if not defined as factor.
-          std_data = purrr::map(std_vars, .f = purrr::possibly( ~ data %>% dplyr::select(dplyr::any_of(.x)) %>% na.omit() %>% dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~scale(.x)))), otherwise = NA),
-          #run standardized regressions and put into tidy data frames
-          std_model = purrr::map2(.x = formula, .y = std_data,
-                                  .f = purrr::possibly(~stats::lm(formula = as.formula(.x), data =  .y), otherwise = NA, quiet = FALSE),
-                                  .progress = ifelse(progress, "Running standardized regressions", FALSE)) %>%
-            purrr::map(purrr::possibly(~broom::tidy(.x, conf.int = TRUE)))
-          # unnest each model so all models form a single table
-        ) %>% tidyr::unnest(std_model) %>%
-        #Only select estimate and confidence interval en give unique name
-        dplyr::select(dplyr::any_of(c("outcome", "predictor", "covariate", "formula", "term", "estimate", "conf.low", "conf.high"))) %>% dplyr::rename_with(~paste0("std_", .x), .cols = c(estimate, conf.low, conf.high)) %>%
-        dplyr::filter(term != "(Intercept)"),
-      by = c("term", "outcome", "predictor", "formula", df %>% dplyr::select(dplyr::any_of(c("covariate"))) %>% names())
-    ) -> df_reg
-  }
-
-  df_reg %>%
+    tidyr::unnest(col = any_of(c(c("model", "std_model"))), keep_empty = TRUE, names_sep = "_") %>%
+    dplyr::select(-(dplyr::starts_with("std_model")&!dplyr::ends_with("estimate"))) %>%
+    dplyr::rename_with(~stringr::str_remove(.x, "model_")) %>%
     dplyr::mutate(
       # round all numeric columns
       dplyr::across(dplyr::where(is.numeric), ~round(.x, digits = 5)),
