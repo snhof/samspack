@@ -47,7 +47,7 @@ lm_mult <- function(data, outcomes, predictors, covariates="", formulas = NULL, 
   if(std_beta == TRUE){
     # generate additional dataframe with standardized regressions and append to normal regressions
     df_reg %>% dplyr::left_join(
-      df %>%
+      df_formulas %>%
         dplyr::mutate(
           # extract variables used in regression formula
           std_vars = stringr::str_extract_all(formula, "([^ \\(\\)\\*\\+~\\|]+)"),
@@ -63,7 +63,7 @@ lm_mult <- function(data, outcomes, predictors, covariates="", formulas = NULL, 
         #Only select estimate and confidence interval en give unique name
         dplyr::select(dplyr::any_of(c("outcome", "predictor", "covariate", "formula", "term", "estimate", "conf.low", "conf.high"))) %>% dplyr::rename_with(~paste0("std_", .x), .cols = c(estimate, conf.low, conf.high)) %>%
         dplyr::filter(term != "(Intercept)"),
-      by = c("term", "outcome", "predictor", "formula", df %>% dplyr::select(dplyr::any_of(c("covariate"))) %>% names())
+      by = c("term", "outcome", "predictor", "formula", df_formulas %>% dplyr::select(dplyr::any_of(c("covariate"))) %>% names())
     ) -> df_reg
   }
 
