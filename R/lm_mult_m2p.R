@@ -1,6 +1,5 @@
 #' lm_mult_m2p: Extract parameters from multiple linear models in a dataframe into a tidy table
 #'
-#' @inheritParams lm_mult
 #' @param df_reg Dataframe containing multiple linear models in a column named 'model' and, optionally standardized models in a column named "std_model". This dataframe can be created with [lm_mult_f2m()].
 #' @param exp_log Do you want to exponentiate the results for log transformed outcomes, set this to TRUE. Default is FALSE.
 #' @param progress Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.
