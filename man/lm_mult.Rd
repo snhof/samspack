@@ -16,7 +16,7 @@ lm_mult(
 )
 }
 \arguments{
-\item{data}{data frame where each row represents an observation of the outcome variable.}
+\item{data}{dataframe where each row represents an observation of the outcome variable.}
 
 \item{outcomes}{a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. \code{c("outcome1", "outcome2", "outcome3")}. It is possible to specify log transformation of the outcome variables, e.g. \code{c("log(outcome1)", "log(outcome2)")}.}
 
@@ -28,7 +28,7 @@ lm_mult(
 
 \item{std_beta}{Do you also want standardized betas in the output, set this to TRUE.}
 
-\item{exp_log}{Do you want to exponentiate the results for log transformed outcomes, set this to TRUE.}
+\item{exp_log}{Do you want to exponentiate the results for log transformed outcomes, set this to TRUE. Default is FALSE.}
 
 \item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
 }
@@ -39,6 +39,7 @@ Large table with results from all regression formulas
 These functions allow you to specify multiple outcome measures, predictors and covariates.
 The function then creates regression formulas from all combinations of these variables.
 The output is a large table with results from all regression formulas.
+This is a wrapper around calling \code{\link[=construct_formulas]{construct_formulas()}}, \code{\link[=lm_mult_f2m]{lm_mult_f2m()}} and \code{\link[=lm_mult_m2p]{lm_mult_m2p()}}, sequentially.
 }
 \examples{
 lm_mult(
