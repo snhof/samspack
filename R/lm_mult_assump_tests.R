@@ -20,7 +20,7 @@ lm_mult_assump_tests <- function(data, outcomes, predictors, covariates="", form
   #create data frame with regression formulas
 df_formulas <- construct_formulas(outcomes = outcomes, predictors = predictors, covariates = covariates, formulas = formulas, randoms = "")
 
-df_reg <- lm_mult_f2m(df_formulas, data = data, std_model = FALSE, progress = FALSE, quiet=TRUE)
+df_reg <- lm_mult_f2m(df_formulas, data = data, std_models = FALSE, progress = FALSE, quiet=TRUE)
 
 df_reg %>%
     dplyr::mutate(

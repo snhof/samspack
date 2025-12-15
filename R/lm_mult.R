@@ -21,12 +21,12 @@
 #' covariates = c("", " + gender")
 #' )
 #'
-lm_mult <- function(data, outcomes, predictors, covariates="", formulas = NULL, std_beta = FALSE, exp_log = FALSE, progress = FALSE) {
+lm_mult <- function(data, outcomes, predictors, covariates="", formulas = NULL, std_beta = FALSE, exp_log = FALSE, progress = FALSE, quiet = FALSE) {
   #create data frame with regression formulas
   df_formulas <- construct_formulas(outcomes = outcomes, predictors = predictors, covariates = covariates, formulas=formulas, randoms = "")
 
   # run a lineair model and iterate through each formula
-  df_reg <- lm_mult_f2m(df_formulas, data = data, std_model = std_beta, progress = progress, quiet=quiet)
+  df_reg <- lm_mult_f2m(df_formulas, data = data, std_models = std_beta, progress = progress, quiet=quiet)
 
  # Extract parameters from models
   lm_mult_m2p(df_reg, exp_log = exp_log, progress = progress)
