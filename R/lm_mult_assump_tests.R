@@ -20,10 +20,10 @@ lm_mult_assump_tests <- function(data, outcomes, predictors, covariates="", form
   #create data frame with regression formulas
 df_formulas <- construct_formulas(outcomes = outcomes, predictors = predictors, covariates = covariates, formulas = formulas, randoms = "")
 
-  # run a lineair model and iterate through each formula
-  df_formulas %>%
+df_reg <- lm_mult_f2m(df_formulas, data = data, std_model = FALSE, progress = FALSE, quiet=TRUE)
+
+df_reg %>%
     dplyr::mutate(
-      model = purrr::map(formula, .f = purrr::possibly(~lm(formula = as.formula(.x), data = data), otherwise = NA, quiet = FALSE)),
       plots = purrr::map(.x = model, .f = ~lm_assump_tests(.x))
     ) %>% dplyr::pull(plots)
 }
