@@ -13,7 +13,7 @@ lm_mult_assump_tests(
 )
 }
 \arguments{
-\item{data}{data frame where each row represents an observation of the outcome variable.}
+\item{data}{dataframe where each row represents an observation of the outcome variable.}
 
 \item{outcomes}{a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. \code{c("outcome1", "outcome2", "outcome3")}. It is possible to specify log transformation of the outcome variables, e.g. \code{c("log(outcome1)", "log(outcome2)")}.}
 

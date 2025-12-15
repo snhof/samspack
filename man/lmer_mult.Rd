@@ -31,7 +31,7 @@ lmer_mult(
 
 \item{control}{This gives you access to the ‘control’ input of the \code{\link[lme4:lmer]{lme4::lmer()}} function and \code{\link[lme4:lmerControl]{lme4::lmerControl()}}. This allows you to bypass certain errors. For example, in case of error about number of observations, you can try control = lmerControl(check.nobs.vs.nRE = ‘ignore’).}
 
-\item{exp_log}{Do you want to exponentiate the results for log transformed outcomes, set this to TRUE.}
+\item{exp_log}{Do you want to exponentiate the results for log transformed outcomes, set this to TRUE. Default is FALSE.}
 
 \item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
 }
