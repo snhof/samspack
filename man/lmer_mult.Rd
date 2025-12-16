@@ -14,7 +14,8 @@ lmer_mult(
   REML = FALSE,
   control = lme4::lmerControl(),
   exp_log = FALSE,
-  progress = FALSE
+  progress = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ lmer_mult(
 \item{exp_log}{Do you want to exponentiate the results for log transformed outcomes, set this to TRUE. Default is FALSE.}
 
 \item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
+
+\item{quiet}{Whether to suppress error messages from model fitting. Default is FALSE. Error messages are always captured and stored in the output dataframe.}
 }
 \value{
 Large table with results from all regression formulas
