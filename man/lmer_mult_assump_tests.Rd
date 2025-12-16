@@ -11,7 +11,10 @@ lmer_mult_assump_tests(
   covariates = "",
   randoms = NULL,
   formulas = NULL,
-  control = lme4::lmerControl()
+  REML = FALSE,
+  control = lme4::lmerControl(),
+  progress = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -27,7 +30,13 @@ lmer_mult_assump_tests(
 
 \item{formulas}{optional vector of formulas specified manually, e.g. \code{c("outcome1 ~ predictor1 + covariate1 + (1|var1)", "outcome2 ~ predictor2 + covariate2 + (1|var2)")}. You can combine this with using the other inputs for single variables, all models are then run.}
 
+\item{REML}{logical scalar - Should the estimates be chosen to optimize the REML criterion (as opposed to the log-likelihood)?}
+
 \item{control}{This gives you access to the ‘control’ input of the \code{\link[lme4:lmer]{lme4::lmer()}} function and \code{\link[lme4:lmerControl]{lme4::lmerControl()}}. This allows you to bypass certain errors. For example, in case of error about number of observations, you can try control = lmerControl(check.nobs.vs.nRE = ‘ignore’).}
+
+\item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
+
+\item{quiet}{Whether to suppress error messages from model fitting. Default is FALSE. Error messages are always captured and stored in the output dataframe.}
 }
 \value{
 A list of plots for checking linear mixed model assumptions for each model.
