@@ -28,6 +28,7 @@ Dataframe provided as "df_formulas" with appended columns containing linear regr
 }
 \description{
 Run and append linear regression models based on a formula dataframe created with \code{\link[=construct_formulas]{construct_formulas()}}.
+The output can be used as input for \code{\link[=lm_mult_m2p]{lm_mult_m2p()}} to extract regression parameters into a tidy dataframe.
 }
 \examples{
 df_formulas <- construct_formulas(

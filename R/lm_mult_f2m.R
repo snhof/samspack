@@ -1,6 +1,7 @@
 #' lm_mult_f2m: Formula dataframe to dataframe with linear regression models
 #'
 #' Run and append linear regression models based on a formula dataframe created with [construct_formulas()].
+#' The output can be used as input for [lm_mult_m2p()] to extract regression parameters into a tidy dataframe.
 #'
 #' @param df_formulas Dataframe containing regression formulas in a column named 'formula', created with [construct_formulas()].
 #' @param data dataframe where each row represents an observation of the outcome variable.
