@@ -11,6 +11,7 @@ lmer_mult(
   covariates = "",
   randoms = NULL,
   formulas = NULL,
+  REML = FALSE,
   control = lme4::lmerControl(),
   exp_log = FALSE,
   progress = FALSE
@@ -28,6 +29,8 @@ lmer_mult(
 \item{randoms}{a vector containing random effects, where the entire enumeration of random effects are in quotes, different random effects in the same model are separated and preceded by a plus and notation from the lme4 package used, e.g. \code{c("+ (1|var1)", "+ (var2|var1)", "+ (1|var1/var3)", "+ (var2|var1) + (1|var1:var3)", "+ (var2|var1/var3)")}. If you want to run a model with and without random effects, specify it like this: \code{c("", "+ (1|var1)")}.}
 
 \item{formulas}{optional vector of formulas specified manually, e.g. \code{c("outcome1 ~ predictor1 + covariate1 + (1|var1)", "outcome2 ~ predictor2 + covariate2 + (1|var2)")}. You can combine this with using the other inputs for single variables, all models are then run.}
+
+\item{REML}{logical scalar - Should the estimates be chosen to optimize the REML criterion (as opposed to the log-likelihood)?}
 
 \item{control}{This gives you access to the ‘control’ input of the \code{\link[lme4:lmer]{lme4::lmer()}} function and \code{\link[lme4:lmerControl]{lme4::lmerControl()}}. This allows you to bypass certain errors. For example, in case of error about number of observations, you can try control = lmerControl(check.nobs.vs.nRE = ‘ignore’).}
 
