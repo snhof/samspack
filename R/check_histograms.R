@@ -12,18 +12,22 @@
 #' check_histograms(data = MS_trial_data, id = pat_id, facets_cols = gender)
 #'
 check_histograms <- function (data, facets_rows = NULL, facets_cols = NULL, id=dplyr::row_number()) {
+  # Pre-compute outliers once for all cases
+  {{data}} %>%
+    dplyr::mutate(
+      dplyr::across(dplyr::where(is.numeric), ~dplyr::if_else(samspack::is_outlier(.x), TRUE, FALSE), .names = "{.col}_outlier")
+    ) -> data_outlier
+  
   if(!missing(facets_rows) & !missing(facets_cols)){
     data %>%
       dplyr::group_by({{facets_rows}}, {{facets_cols}}) %>%
       dplyr::mutate(
-        dplyr::across(dplyr::where(is.numeric), ~mean(., na.rm=TRUE), .names = "{.col}_facet_mean"),
-        dplyr::across(dplyr::where(is.numeric), ~median(., na.rm=TRUE), .names = "{.col}_facet_median"),
+        # Combine mean and median calculations in one pass
+        dplyr::across(dplyr::where(is.numeric), list(
+          facet_mean = ~mean(., na.rm=TRUE),
+          facet_median = ~median(., na.rm=TRUE)
+        ))
       ) %>% dplyr::ungroup() -> data_hist
-
-    {{data}} %>%
-      dplyr::mutate(
-        dplyr::across(dplyr::where(is.numeric), ~dplyr::if_else(samspack::is_outlier(.x), TRUE, FALSE), .names = "{.col}_outlier")
-      ) -> data_outlier
 
     purrr::map(
       .x = data_hist %>% dplyr::select(dplyr::where(is.numeric),-dplyr::ends_with("_facet_mean"), -dplyr::ends_with("_facet_median"), -{{id}}) %>% names(),
@@ -47,14 +51,12 @@ check_histograms <- function (data, facets_rows = NULL, facets_cols = NULL, id=d
     data %>%
       dplyr::group_by({{facets_cols}}) %>%
       dplyr::mutate(
-        dplyr::across(dplyr::where(is.numeric), ~mean(., na.rm=TRUE), .names = "{.col}_facet_mean"),
-        dplyr::across(dplyr::where(is.numeric), ~median(., na.rm=TRUE), .names = "{.col}_facet_median"),
+        # Combine mean and median calculations in one pass
+        dplyr::across(dplyr::where(is.numeric), list(
+          facet_mean = ~mean(., na.rm=TRUE),
+          facet_median = ~median(., na.rm=TRUE)
+        ))
       ) %>% dplyr::ungroup() -> data_hist
-
-    {{data}} %>%
-      dplyr::mutate(
-        dplyr::across(dplyr::where(is.numeric), ~dplyr::if_else(is_outlier(.x), TRUE, FALSE), .names = "{.col}_outlier")
-      ) -> data_outlier
 
     purrr::map(
       .x = data_hist %>% dplyr::select(dplyr::where(is.numeric),-dplyr::ends_with("_facet_mean"), -dplyr::ends_with("_facet_median"), -{{id}}) %>% names(),
@@ -77,14 +79,12 @@ check_histograms <- function (data, facets_rows = NULL, facets_cols = NULL, id=d
 
     data %>%
       dplyr::mutate(
-        dplyr::across(dplyr::where(is.numeric), ~mean(., na.rm=TRUE), .names = "{.col}_hist_mean"),
-        dplyr::across(dplyr::where(is.numeric), ~median(., na.rm=TRUE), .names = "{.col}_hist_median"),
+        # Combine mean and median calculations in one pass
+        dplyr::across(dplyr::where(is.numeric), list(
+          hist_mean = ~mean(., na.rm=TRUE),
+          hist_median = ~median(., na.rm=TRUE)
+        ))
       ) %>% dplyr::ungroup() -> data_hist
-
-    {{data}} %>%
-      dplyr::mutate(
-        dplyr::across(dplyr::where(is.numeric), ~dplyr::if_else(is_outlier(.x), TRUE, FALSE), .names = "{.col}_outlier")
-      ) -> data_outlier
 
     purrr::map(
       .x = data_hist %>% dplyr::select(dplyr::where(is.numeric),-dplyr::ends_with("_hist_mean"), -dplyr::ends_with("_hist_median"),-{{id}}) %>% names(),
