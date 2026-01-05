@@ -8,7 +8,8 @@ check_histograms(
   data,
   facets_rows = NULL,
   facets_cols = NULL,
-  id = dplyr::row_number()
+  id = dplyr::row_number(),
+  bins_method = "sturges"
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ check_histograms(
 \item{facets_cols}{Variable to split data by in columns for faceted plots.}
 
 \item{id}{Identifier for labeling outliers in plots, default is row number.}
+
+\item{bins_method}{Method for determining histogram bin width. Choices are "sturges", "scott", "fd" (Freedman-Diaconis) or a numeric value specifying the number of bins. Default is "sturges".}
 }
 \value{
 List of ggplot2 histogram objects for each numeric variable, with outliers labeled.
