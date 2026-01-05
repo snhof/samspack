@@ -14,6 +14,8 @@ lmer_mult_f2m(
 )
 }
 \arguments{
+\item{df_formulas}{Dataframe containing regression formulas in a column named 'formula', created with \code{\link[=construct_formulas]{construct_formulas()}}.}
+
 \item{data}{data frame with outcomes, predictors, covariates and variables for random effects in long format with a row for every observation of the outcome variables. See \link{MS_trial_data} for an example dataset.}
 
 \item{REML}{logical scalar - Should the estimates be chosen to optimize the REML criterion (as opposed to the log-likelihood)?}

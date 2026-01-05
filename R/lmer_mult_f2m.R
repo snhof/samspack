@@ -4,7 +4,7 @@
 #'
 #'"std_models" to obtain standardized regression coefficients may be implemented in the future, but is currently not available.
 #'
-#' @inheritParams lm_mult
+#' @inheritParams lm_mult_f2m
 #' @param data data frame with outcomes, predictors, covariates and variables for random effects in long format with a row for every observation of the outcome variables. See [MS_trial_data] for an example dataset.
 #' @param REML logical scalar - Should the estimates be chosen to optimize the REML criterion (as opposed to the log-likelihood)?
 #' @param control This gives you access to the ‘control’ input of the [lme4::lmer()] function and [lme4::lmerControl()]. This allows you to bypass certain errors. For example, in case of error about number of observations, you can try control = lmerControl(check.nobs.vs.nRE = ‘ignore’).
