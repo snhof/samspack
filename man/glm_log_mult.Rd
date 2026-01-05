@@ -12,11 +12,12 @@ glm_log_mult(
   formulas = NULL,
   exponentiate = TRUE,
   progress = FALSE,
-  std_odds = FALSE
+  std_odds = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
-\item{data}{Dataframe containing all variables for regression analyses.}
+\item{data}{Dataframe containing all variables for regression analyses, where each row is an observation of the outcome variable.}
 
 \item{outcomes}{a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. \code{c("outcome1", "outcome2", "outcome3")}. It is possible to specify log transformation of the outcome variables, e.g. \code{c("log(outcome1)", "log(outcome2)")}.}
 
@@ -31,6 +32,8 @@ glm_log_mult(
 \item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
 
 \item{std_odds}{Do you want to standardize the log(odds)? Default is FALSE.}
+
+\item{quiet}{Whether to suppress error messages from model fitting. Default is FALSE. Error messages are always captured and stored in the output dataframe.}
 }
 \value{
 Dataframe with results from multiple logistic regression analyses.

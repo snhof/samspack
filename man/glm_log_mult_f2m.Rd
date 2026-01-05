@@ -13,9 +13,9 @@ glm_log_mult_f2m(
 )
 }
 \arguments{
-\item{df_formulas}{Dataframe containing regression formulas in a column named 'formula', created with \code{\link[=construct_formulas]{construct_formulas()}}.}
+\item{df_formulas}{Dataframe created with \code{\link[=construct_formulas]{construct_formulas()}} containing formulas for regression analyses.}
 
-\item{data}{dataframe where each row represents an observation of the outcome variable.}
+\item{data}{Dataframe containing all variables for regression analyses, where each row is an observation of the outcome variable.}
 
 \item{std_models}{Do you want to run standardized versions of the models as well? This allows for standardized log(odds). Default is FALSE. For logistic regression only predictors and covariates are standardized as outcome is already on the same scale (OR). Be careful with interpretation.}
 

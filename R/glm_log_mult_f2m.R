@@ -4,6 +4,8 @@
 #'  The output can be used as input to [glm_log_mult_m2p()] to extract parameters in a tidy format.
 #'
 #' @inheritParams lm_mult_f2m
+#' @param df_formulas Dataframe created with [construct_formulas()] containing formulas for regression analyses.
+#' @param data Dataframe containing all variables for regression analyses, where each row is an observation of the outcome variable.
 #' @param std_models Do you want to run standardized versions of the models as well? This allows for standardized log(odds). Default is FALSE. For logistic regression only predictors and covariates are standardized as outcome is already on the same scale (OR). Be careful with interpretation.
 #'
 #' @returns Dataframe provided as "df_formulas" with appended columns containing logistic regression models and error messages.
@@ -41,7 +43,6 @@ glm_log_mult_f2m <- function(df_formulas, data, std_models = FALSE, progress = F
   #For logistic regression only predictors and covariates are standardized as outcome is already on the same scale (OR). Be careful with interpretation.
   if(std_models == TRUE){
     # generate additional dataframe with standardized regressions and append to normal regressions
-    df_reg %>% dplyr::left_join(
       df_reg %>%
         dplyr::mutate(
           # extract variables used in regression formula
@@ -54,8 +55,9 @@ glm_log_mult_f2m <- function(df_formulas, data, std_models = FALSE, progress = F
                                   .f = purrr::possibly(~glm(formula = as.formula(.x), data = .y, family = binomial), otherwise = NA, quiet = FALSE),
                                   .progress = ifelse(progress, "Running logistic regression models with standardized predictors", FALSE)),
           # unnest each model so all models form a single table
-        ) %>% dplyr::select(-c(std_vars, std_data))
-    ) %>% dplyr::relocate(std_model, .after = model) -> df_reg
+        ) %>%
+      dplyr::select(-c(std_vars, std_data)) %>%
+      dplyr::relocate(std_model, .after = model) -> df_reg
   }
 
   return(df_reg)
