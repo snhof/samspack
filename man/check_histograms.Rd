@@ -6,18 +6,18 @@
 \usage{
 check_histograms(
   data,
-  facets_rows = NULL,
-  facets_cols = NULL,
-  id = dplyr::row_number(),
+  facet_rows = NULL,
+  facet_cols = NULL,
+  id = NULL,
   bins_method = "sturges"
 )
 }
 \arguments{
 \item{data}{Dataframe containing numeric variables to check for normality.}
 
-\item{facets_rows}{Variable to split data by in rows for faceted plots.}
+\item{facet_rows}{Variable to split data by in columns for faceted plots.}
 
-\item{facets_cols}{Variable to split data by in columns for faceted plots.}
+\item{facet_cols}{Variable to split data by in rows for faceted plots.}
 
 \item{id}{Identifier for labeling outliers in plots, default is row number.}
 
@@ -30,6 +30,6 @@ List of ggplot2 histogram objects for each numeric variable, with outliers label
 check_histograms: Check normality for multiple variables in dataframe
 }
 \examples{
-check_histograms(data = MS_trial_data, id = pat_id, facets_cols = gender)
+check_histograms(data = MS_trial_data, id = pat_id, facet_cols = gender)
 
 }
