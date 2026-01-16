@@ -26,7 +26,6 @@ Imports:
     lmerTest,
     magrittr,
     purrr,
-    rlang,
     stats,
     stringr,
     tidyr,
