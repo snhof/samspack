@@ -49,18 +49,18 @@ lmer_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
       term_ranova = purrr::map(ranova, .f = purrr::possibly(~.x %>% attr("formulae") %>% names() %>% dplyr::nth(1))),
       npar_ranova = purrr::map(ranova, .f = purrr::possibly(~.x %>% dplyr::pull(npar) %>% dplyr::nth(2))),
       p_ranova = purrr::map(ranova, .f = purrr::possibly(~.x %>% dplyr::pull(`Pr(>Chisq)`) %>% dplyr::nth(2))),
-      model = purrr::map(model, .f = purrr::possibly(~broom.mixed::tidy(.x, conf.int = TRUE)), .progress = ifelse(progress, "Making output pretty", FALSE))
+      model_result = purrr::map(model, .f = purrr::possibly(~broom.mixed::tidy(.x, conf.int = TRUE)), .progress = ifelse(progress, "Making output pretty", FALSE))
     ) %>% dplyr::select(-ranova) %>%
 
     # unnest each model so all models form a single table
-    tidyr::unnest(col = c(model, model_error, isSingular, logLik, deviance, term_ranova, npar_ranova, p_ranova)) %>%
+    tidyr::unnest(col = c(model_result, model_error, isSingular, logLik, deviance, term_ranova, npar_ranova, p_ranova)) %>%
     dplyr::select(-dplyr::any_of(c('x'))) %>%
 
     # round all numeric columns
     dplyr::mutate(
       dplyr::across(dplyr::where(is.numeric), ~round(.x, digits = 5)),
-      model = "Linear mixed model",
+      model_type = "Linear mixed model",
       dplyr::across(c(estimate, conf.low, conf.high), ~dplyr::if_else(stringr::str_detect(outcome, "log\\(") & exp_log == TRUE, exp(.x), .x))
     ) %>%
-    dplyr::relocate(model)
+    dplyr::relocate(model_type, outcome, predictor, covariate, random, formula, effect, group, term, estimate, std.error, statistic, df, p.value, conf.low, conf.high, isSingular, logLik, deviance, term_ranova, npar_ranova, p_ranova, model, model_error)
 }
