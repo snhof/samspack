@@ -9,12 +9,12 @@
 #'
 #' @examples
 #'
-#' model <- lme4::lmer(SDMT ~ age + (1|gender), data = MS_trial_data, REML = FALSE)
+#' model <- lme4::lmer(SDMT ~ intervention + (1|pat_id), data = MS_trial_data, REML = FALSE)
 #' lmer_assump_tests(model)
 #'
 lmer_assump_tests <- function(model) {
   data <- broom.mixed::augment(model) %>%
-    mutate(
+    dplyr::mutate(
       residual_type = dplyr::case_when(
         .resid < 0 ~ "negative",
         .resid > 0 ~ "positive",

@@ -14,7 +14,7 @@
 #'
 lm_assump_tests <- function(model) {
   data <- broom::augment(model) %>%
-    mutate(
+    dplyr::mutate(
       residual_type = dplyr::case_when(
         .resid < 0 ~ "negative",
         .resid > 0 ~ "positive",
@@ -61,5 +61,5 @@ lm_assump_tests <- function(model) {
 }
 
 utils::globalVariables(c(
-  ".resid", "median", ".fitted", ".std.resid"
+  ".resid", "median", ".fitted", ".std.resid", "residual_type"
 ))
