@@ -10,7 +10,8 @@ histogram_sp(
   id = NULL,
   bins_method = "sturges",
   facet_cols = NULL,
-  facet_rows = NULL
+  facet_rows = NULL,
+  max.overlaps = 20
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ histogram_sp(
 \item{facet_cols}{Variable to split data by in rows for faceted plots.}
 
 \item{facet_rows}{Variable to split data by in columns for faceted plots.}
+
+\item{max.overlaps}{Maximum number of overlaps allowed for outlier labels before suppression. Default is 20. Use "Inf" to disable suppression entirely.}
 }
 \value{
 ggplot2 histogram object with outliers labeled.
