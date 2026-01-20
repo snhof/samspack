@@ -64,3 +64,7 @@ lmer_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
     ) %>%
     dplyr::relocate(model_type, outcome, predictor, covariate, random, formula, effect, group, term, estimate, std.error, statistic, df, p.value, conf.low, conf.high, isSingular, logLik, deviance, term_ranova, npar_ranova, p_ranova, model, model_error)
 }
+
+utils::globalVariables(c(
+  "model_type", "effect", "group", "std.error", "statistic", "df", "p.value"
+))
