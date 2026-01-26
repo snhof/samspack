@@ -21,7 +21,7 @@ lmer_assump_tests <- function(model) {
       )
     )
 
-  ranef_resid_plot <- performance::check_normality(model, effects = "random") %>% plot()
+  ranef_resid_plot <- try(performance::check_normality(model, effects = "random") %>% plot())
 
   ggpubr::ggarrange(
     #Normality residuals
