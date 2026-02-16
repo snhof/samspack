@@ -25,6 +25,7 @@ Imports:
     lme4,
     lmerTest,
     magrittr,
+    patchwork,
     performance,
     purrr,
     see,
