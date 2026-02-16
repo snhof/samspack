@@ -20,7 +20,6 @@ Imports:
     dplyr,
     geepack,
     ggplot2,
-    ggpubr,
     ggrepel,
     lme4,
     lmerTest,
