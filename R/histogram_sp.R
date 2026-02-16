@@ -25,7 +25,7 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
   gobj <- data %>%
     ggplot2::ggplot(ggplot2::aes(x = {{var}})) +
     #Histogram
-    ggplot2::geom_histogram(color = 1, fill = "white", binwidth = ~ bins_method(.x, bins_method)) +
+    ggplot2::geom_histogram(color = 1, fill = "lightgrey", binwidth = ~ bins_method(.x, bins_method)) +
     #Density plot
     ggplot2::geom_density(ggplot2::aes(y = ggplot2::after_stat(count)), color = "red") +
     # Mean line
@@ -94,7 +94,9 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
       size = 2,
       ggplot2::aes(label = id),
       max.overlaps = max.overlaps
-    )
+    )+
+    #Styling
+    ggplot2::theme_minimal()
 }
 
 
