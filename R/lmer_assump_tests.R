@@ -66,9 +66,7 @@ lmer_assump_tests <- function(model) {
 
 
   patchwork::wrap_plots(
-    resid_histogram,
-    resid_fitted_plot,
-    ranef_resid_plot,
+    purrr::compact(c(resid_histogram, resid_fitted_plot, ranef_resid_plot)),
     design = "12
               13"
   ) +
