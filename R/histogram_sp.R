@@ -69,7 +69,7 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
     # Facets if specified by facet_rows and/or facet_cols
     ggplot2::facet_grid(rows = dplyr::vars({{ facet_rows }}), cols = dplyr::vars({{ facet_cols }})) +
     # Var name as x-axis label
-    ggplot2::labs(x = dplyr::quo({{var}}))
+    ggplot2::labs(x = dplyr::quo({{var}}), y = "count")
 
   build <- ggplot2::ggplot_build(gobj)
   ymax <- max(build$data[[1]]$count, na.rm = TRUE)
