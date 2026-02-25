@@ -26,19 +26,19 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
     ggplot2::ggplot(ggplot2::aes(x = {{var}})) +
     #Histogram
     ggplot2::geom_histogram(color = 1, fill = "lightgrey", binwidth = ~ bins_method(.x, bins_method)) +
-    #Density plot
-    ggplot2::geom_density(ggplot2::aes(y = ggplot2::after_stat(count)), color = "red") +
-    # Mean line
+    #Mean line
     ggplot2::geom_vline(
-      ggplot2::aes(x = median({{var}}, na.rm = TRUE),  y = {{var}}, xintercept = ggplot2::after_stat(y), color = "mean"),
+      ggplot2::aes(
+        x = median({{var}}, na.rm = TRUE),  y = {{var}},
+        xintercept = ggplot2::after_stat(y), color = "mean"),
       stat = "summary",
       fun = ~ mean(.x),
       linetype = "dashed",
       na.rm = TRUE
     ) +
-    # Median lineM
+    # Median line
     ggplot2::geom_vline(
-      ggplot2::aes(x = median({{var }}, na.rm = TRUE), y = {{var}}, xintercept = ggplot2::after_stat(y), color = "median"),
+      ggplot2::aes(x = median({{var}}, na.rm = TRUE), y = {{var}}, xintercept = ggplot2::after_stat(y), color = "median"),
       stat = "summary",
       fun = ~ median(.x),
       linetype = "dashed",
@@ -71,7 +71,9 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
     # Var name as x-axis label
     ggplot2::labs(x = dplyr::quo({{var}}))
 
-  ymax <- ggplot2::ggplot_build(gobj)$layout$panel_params[[1]]$y.range[2] # get y-axis maximum
+  build <- ggplot2::ggplot_build(gobj)
+  ymax <- max(build$data[[1]]$count, na.rm = TRUE)
+  #ymax <- ggplot2::ggplot_build(gobj)$layout$panel_params[[1]]$y.range[2] # get y-axis maximum
   boxplot_width <- ymax * 0.1 # set boxplot width as 10% of y-axis maximum
 
   # Add boxplot and outlier labels
@@ -80,6 +82,10 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
     width = boxplot_width,
     varwidth = TRUE
   ) +
+    #Density plot
+    ggplot2::geom_density(ggplot2::aes(y = ggplot2::after_stat(scaled) * ymax), color = "red") +
+    ggplot2::scale_y_continuous(sec.axis = ggplot2::sec_axis(~ . / ymax, name = "density")) +
+    ggplot2::coord_cartesian(ylim = c(-boxplot_width * 1.5, ymax * 1.05))+
     ggrepel::geom_text_repel(
       data = data %>% dplyr::group_by({{ facet_rows }}, {{ facet_cols }}) %>%
         dplyr::mutate(
@@ -96,8 +102,13 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
       max.overlaps = max.overlaps
     )+
     #Styling
-    ggplot2::theme_minimal()
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      axis.text.y.right = ggplot2::element_text(colour="red"),
+      axis.title.y.right = ggplot2::element_text(colour="red")
+    )
+
 }
 
 
-utils::globalVariables(c("count", "y"))
+utils::globalVariables(c("count", "y", "scaled"))
