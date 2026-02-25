@@ -16,21 +16,14 @@
 #' covariates = c("", " + gender")
 #' )
 #'
-lm_mult_assump_tests <- function(data, outcomes, predictors, covariates="") {
+lm_mult_assump_tests <- function(data, outcomes, predictors, covariates="", formulas = NULL) {
   #create data frame with regression formulas
-  #Making all possible combinations of outcomes, predictors and covariates
-  tidyr::expand_grid(
-    outcome = outcomes,
-    predictor = predictors,
-    covariate = covariates
-  ) %>%
-    #pasting outcomes, predictors and covariates together to create formula.
-    dplyr::mutate(formula=paste0(paste(outcome, predictor, sep = "~"), covariate)) -> df
+df_formulas <- construct_formulas(outcomes = outcomes, predictors = predictors, covariates = covariates, formulas = formulas, randoms = "")
 
-  # run a lineair model and iterate through each formula
-  df %>%
+df_reg <- lm_mult_f2m(df_formulas, data = data, std_models = FALSE, progress = FALSE, quiet=TRUE)
+
+df_reg %>%
     dplyr::mutate(
-      model = purrr::map(formula, .f = purrr::possibly(~lm(formula = as.formula(.x), data = data), otherwise = NA, quiet = FALSE)),
       plots = purrr::map(.x = model, .f = ~lm_assump_tests(.x))
     ) %>% dplyr::pull(plots)
 }

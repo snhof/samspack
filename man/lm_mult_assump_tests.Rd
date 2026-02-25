@@ -4,16 +4,24 @@
 \alias{lm_mult_assump_tests}
 \title{lm_mult_assump_tests: Generate plots for checking linear regression assumptions for multiple models}
 \usage{
-lm_mult_assump_tests(data, outcomes, predictors, covariates = "")
+lm_mult_assump_tests(
+  data,
+  outcomes,
+  predictors,
+  covariates = "",
+  formulas = NULL
+)
 }
 \arguments{
-\item{data}{data frame with all your data.}
+\item{data}{dataframe where each row represents an observation of the outcome variable.}
 
-\item{outcomes}{a vector with your outcome variables (dependent variables), where the names of your variables are in quotes. For example: c(‘outcome1’, ‘outcome2’, ‘outcome3’).}
+\item{outcomes}{a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. \code{c("outcome1", "outcome2", "outcome3")}. It is possible to specify log transformation of the outcome variables, e.g. \code{c("log(outcome1)", "log(outcome2)")}.}
 
-\item{predictors}{A vector containing your predictors (independent variables), where the names of your variables are in quotes. For example: c(‘predictor1’, ‘predictor2’, ‘predictor3’). It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. c(‘predictor1’, ‘fct_rev(predictor1)’). It is also possible to specify interaction terms, e.g. c(‘predictor1 * predictor2’, ‘predictor2 * predictor 3’).}
+\item{predictors}{a vector with predictors (independent variables), where the names of the variables are in quotes, e.g. \code{c("predictor1", "predictor2", "predictor3")}. It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. \code{c("predictor1", "fct_rev(predictor1)")}. It is also possible to specify interaction terms, e.g. \code{c("predictor1 * predictor2", "predictor2 * predictor 3")}.}
 
-\item{covariates}{a vector containing your covariates (variables you want to correct for), where the entire enumeration of covariates per model are in quotes and different covariates in the same model are separated by a plus. Also, covariates should be preceded by a plus. For example: c(‘+ covariate 1 + covariate 2’, ‘+ covariate2 + covariate3’). If you want to run a model with and without covariates then specify it like this: c(‘’, ‘+ covariate 1 + covariate 2’)}
+\item{covariates}{a vector containing covariates (variables you want to correct for), where the entire enumeration of covariates are in quotes, different covariates in the same model are separated and preceded by a plus, e.g. \code{c("+ covariate 1 + covariate 2", "+ covariate2 + covariate3")}. If you want to run a model with and without covariates then specify it like this: \code{c("", "+ covariate 1 + covariate 2")}.}
+
+\item{formulas}{optional vector of formulas specified manually, e.g. \code{c("outcome1 ~ predictor1 + covariate1 + (1|var1)", "outcome2 ~ predictor2 + covariate2 + (1|var2)")}. You can combine this with using the other inputs for single variables, all models are then run.}
 }
 \value{
 A list of plots for checking linear regression assumptions for each model.

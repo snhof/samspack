@@ -10,24 +10,33 @@ lmer_mult_assump_tests(
   predictors = NULL,
   covariates = "",
   randoms = NULL,
-  formula = NULL,
-  control = lme4::lmerControl()
+  formulas = NULL,
+  REML = FALSE,
+  control = lme4::lmerControl(),
+  progress = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
 \item{data}{data frame with outcomes, predictors, covariates and variables for random effects in long format with a row for every observation of the outcome variables. See \link{MS_trial_data} for an example dataset.}
 
-\item{outcomes}{a vector with your outcome variables (dependent variables), where the names of your variables are in quotes. For example: c(‘outcome1’, ‘outcome2’, ‘outcome3’). Here it is also possible to log transform your outcomes, e.g. c(‘log(outcome1)’, ‘log(outcome2)’)}
+\item{outcomes}{a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. \code{c("outcome1", "outcome2", "outcome3")}. It is possible to specify log transformation of the outcome variables, e.g. \code{c("log(outcome1)", "log(outcome2)")}.}
 
-\item{predictors}{A vector containing your predictors (independent variables), where the names of your variables are in quotes. For example: c(‘predictor1’, ‘predictor2’, ‘predictor3’). It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. c(‘predictor1’, ‘fct_rev(predictor1)’). It is also possible to specify interaction terms, e.g. c(‘predictor1 * predictor2’, ‘predictor2 * predictor 3’).}
+\item{predictors}{a vector with predictors (independent variables), where the names of the variables are in quotes, e.g. \code{c("predictor1", "predictor2", "predictor3")}. It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. \code{c("predictor1", "fct_rev(predictor1)")}. It is also possible to specify interaction terms, e.g. \code{c("predictor1 * predictor2", "predictor2 * predictor 3")}.}
 
-\item{covariates}{a vector containing your covariates (variables you want to correct for), where the entire enumeration of covariates per model are in quotes and different covariates in the same model are separated by a plus. Also, covariates should be preceded by a plus. For example: c(‘+ covariate 1 + covariate 2’, ‘+ covariate2 + covariate3’). If you want to run a model with and without covariates then specify it like this: c(‘’, ‘+ covariate 1 + covariate 2’)}
+\item{covariates}{a vector containing covariates (variables you want to correct for), where the entire enumeration of covariates are in quotes, different covariates in the same model are separated and preceded by a plus, e.g. \code{c("+ covariate 1 + covariate 2", "+ covariate2 + covariate3")}. If you want to run a model with and without covariates then specify it like this: \code{c("", "+ covariate 1 + covariate 2")}.}
 
-\item{randoms}{a vector containing your random effects, where the entire enumeration of random effects per model are in quotes and different random effects in the same model are separated by a plus. Also, random effects must be preceded by a plus. Use notation from lme4 package for random effects. For example: c(‘+ (1|var1)’, ‘+ (var2|var1)’, ‘+ (1|var1/var3)’, ‘+ (var2|var1) + (1|var1:var3)’, ‘+ (var2|var1/var3)’). If you want to run a model with and without random effects, specify it like this: c(‘’, ‘+ (1|var1)’)}
+\item{randoms}{a vector containing random effects, where the entire enumeration of random effects are in quotes, different random effects in the same model are separated and preceded by a plus and notation from the lme4 package used, e.g. \code{c("+ (1|var1)", "+ (var2|var1)", "+ (1|var1/var3)", "+ (var2|var1) + (1|var1:var3)", "+ (var2|var1/var3)")}. If you want to run a model with and without random effects, specify it like this: \code{c("", "+ (1|var1)")}.}
 
-\item{formula}{Here you can optionally specify your variables as regression formulas instead of single variables. You can combine using this with using the other inputs, all models are then run. for example: c(‘outcome1 ~ predictor1 + covariate1 + (1|var1)’, ‘outcome2 ~ predictor2 + covariate2 + (1|var2)’)}
+\item{formulas}{optional vector of formulas specified manually, e.g. \code{c("outcome1 ~ predictor1 + covariate1 + (1|var1)", "outcome2 ~ predictor2 + covariate2 + (1|var2)")}. You can combine this with using the other inputs for single variables, all models are then run.}
 
-\item{control}{This gives you access to the ‘control’ input of the lmer() function. This allows you to bypass certain errors. For example, in case of error about number of observations, you can try control = lmerControl(check.nobs.vs.nRE = ‘ignore’).}
+\item{REML}{logical scalar - Should the estimates be chosen to optimize the REML criterion (as opposed to the log-likelihood)?}
+
+\item{control}{This gives you access to the ‘control’ input of the \code{\link[lme4:lmer]{lme4::lmer()}} function and \code{\link[lme4:lmerControl]{lme4::lmerControl()}}. This allows you to bypass certain errors. For example, in case of error about number of observations, you can try control = lmerControl(check.nobs.vs.nRE = ‘ignore’).}
+
+\item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
+
+\item{quiet}{Whether to suppress error messages from model fitting. Default is FALSE. Error messages are always captured and stored in the output dataframe.}
 }
 \value{
 A list of plots for checking linear mixed model assumptions for each model.

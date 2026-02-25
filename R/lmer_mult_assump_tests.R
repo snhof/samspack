@@ -18,32 +18,14 @@
 #'  randoms = c("+ (1|pat_id)")
 #'  )
 #'
-lmer_mult_assump_tests <- function(data, outcomes = NULL, predictors=NULL, covariates="", randoms = NULL, formula=NULL, control = lme4::lmerControl()) {
+lmer_mult_assump_tests <- function(data, outcomes = NULL, predictors=NULL, covariates="", randoms = NULL, formulas=NULL, REML = FALSE, control = lme4::lmerControl(), progress = FALSE, quiet = FALSE) {
 
-  if(!is.null(outcomes) & !is.null(predictors)){
-    #create data frame with regression formulas
-    dplyr::bind_rows(
-      tidyr::expand_grid(
-        outcome = outcomes,
-        predictor = predictors,
-        covariate = covariates,
-        random = randoms
-      ) %>%
-        dplyr::mutate(formula = paste0(paste(outcome, predictor, sep = "~"), covariate, random)),
+  df_formulas <- construct_formulas(outcomes = outcomes, predictors = predictors, covariates = covariates, randoms = randoms, formulas = formulas)
 
-      # add regressions defined by formula
-      dplyr::tibble(formula = formula)
-    ) -> df
+  df_reg <- lmer_mult_f2m(df_formulas, data = data, REML = REML, control = control, progress = progress, quiet = quiet)
 
-  }  else {
-    # Only include regression defined by formula
-    dplyr::tibble(formula = formula) -> df
-  }
-
-  df %>%
-    # run a lineair model and iterate through each formula
+  df_reg %>%
     dplyr::mutate(
-      model = purrr::map(formula, .f = purrr::possibly(~lmerTest::lmer(formula = as.formula(.x), data = data, REML = FALSE, control = control), otherwise = NA, quiet = FALSE)),
       plots = purrr::map(.x = model, .f = ~lmer_assump_tests(.x))
     ) %>% dplyr::pull(plots)
 

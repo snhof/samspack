@@ -9,25 +9,31 @@ glm_log_mult(
   outcomes,
   predictors,
   covariates = "",
+  formulas = NULL,
   exponentiate = TRUE,
-  show_progress = FALSE,
-  std_odds = FALSE
+  progress = FALSE,
+  std_odds = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
-\item{data}{Dataframe containing all variables for regression analyses.}
+\item{data}{Dataframe containing all variables for regression analyses, where each row is an observation of the outcome variable.}
 
-\item{outcomes}{A vector with your outcome variables (dependent variables), where the names of your variables are in quotes. For example: c(‘outcome1’, ‘outcome2’, ‘outcome3’).}
+\item{outcomes}{a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. \code{c("outcome1", "outcome2", "outcome3")}. It is possible to specify log transformation of the outcome variables, e.g. \code{c("log(outcome1)", "log(outcome2)")}.}
 
-\item{predictors}{A vector containing your predictors (independent variables), where the names of your variables are in quotes. For example: c(‘predictor1’, ‘predictor2’, ‘predictor3’). It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. c(‘predictor1’, ‘fct_rev(predictor1)’). It is also possible to specify interaction terms, e.g. c(‘predictor1 * predictor2’, ‘predictor2 * predictor 3’).}
+\item{predictors}{a vector with predictors (independent variables), where the names of the variables are in quotes, e.g. \code{c("predictor1", "predictor2", "predictor3")}. It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. \code{c("predictor1", "fct_rev(predictor1)")}. It is also possible to specify interaction terms, e.g. \code{c("predictor1 * predictor2", "predictor2 * predictor 3")}.}
 
-\item{covariates}{A vector containing your covariates (variables you want to correct for), where the entire enumeration of covariates per model are in quotes and different covariates in the same model are separated by a plus. Also, covariates should be preceded by a plus. For example: c(‘+ covariate 1 + covariate 2’, ‘+ covariate2 + covariate3’). If you want to run a model with and without covariates then specify it like this: c(‘’, ‘+ covariate 1 + covariate 2’)}
+\item{covariates}{a vector containing covariates (variables you want to correct for), where the entire enumeration of covariates are in quotes, different covariates in the same model are separated and preceded by a plus, e.g. \code{c("+ covariate 1 + covariate 2", "+ covariate2 + covariate3")}. If you want to run a model with and without covariates then specify it like this: \code{c("", "+ covariate 1 + covariate 2")}.}
+
+\item{formulas}{optional vector of formulas specified manually, e.g. \code{c("outcome1 ~ predictor1 + covariate1 + (1|var1)", "outcome2 ~ predictor2 + covariate2 + (1|var2)")}. You can combine this with using the other inputs for single variables, all models are then run.}
 
 \item{exponentiate}{Do you want to exponentiate the output (e^x) so that you get the odds ratio? Default is TRUE.}
 
-\item{show_progress}{Do you want to see the progress of running the models? Default is FALSE.}
+\item{progress}{Whether to show a progress bar. Use TRUE to turn on a progress bar, default is FALSE.}
 
 \item{std_odds}{Do you want to standardize the log(odds)? Default is FALSE.}
+
+\item{quiet}{Whether to suppress error messages from model fitting. Default is FALSE. Error messages are always captured and stored in the output dataframe.}
 }
 \value{
 Dataframe with results from multiple logistic regression analyses.

@@ -33,3 +33,32 @@
 
 #' @rdname cutoff_VDI
 "cutoff_VDI_PvAm"
+
+#' Example measurement DEMoNS eyetracking protocol
+#'
+#' Example data obtained from two measurements using the DEMoNS eyetracking protocol [(Nij Bijvank et al. 2018)](https://doi.org/10.1371/journal.pone.0200695). Task and analysis MATLAB scripts are available at [protocols.io](https://www.protocols.io/view/demons-protocol-for-measurement-and-analysis-of-ey-x54v98eyml3e/v3).
+#' Includes data for fixation, pro-saccades, anti-saccades, express saccades, double-step saccades and repeated saccades task.
+#' For data specific to single tasks, see [DEMoNS_data_fix], [DEMoNS_data_prosac], [DEMoNS_data_antisac], [DEMoNS_data_expsac], [DEMoNS_data_dblstep] and [DEMoNS_data_repsac].
+#'
+#' @name DEMoNS_data
+#' @source Generated using tasks and scripts available at [protocols.io](https://www.protocols.io/view/demons-protocol-for-measurement-and-analysis-of-ey-x54v98eyml3e/v3).
+"DEMoNS_data"
+
+#' @rdname DEMoNS_data
+"DEMoNS_data_fix"
+
+#' @rdname DEMoNS_data
+"DEMoNS_data_prosac"
+
+#' @rdname DEMoNS_data
+"DEMoNS_data_antisac"
+
+#' @rdname DEMoNS_data
+"DEMoNS_data_expsac"
+
+#' @rdname DEMoNS_data
+"DEMoNS_data_dblstep"
+
+#' @rdname DEMoNS_data
+"DEMoNS_data_repsac"
+
