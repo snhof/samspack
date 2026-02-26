@@ -219,8 +219,6 @@ lines, a boxplot, a density curve, and outlier labels.
 check_histograms(data = MS_trial_data, id = pat_id, facet_cols = gender)[[1]]
 ```
 
-![](man/figures/README-check_histograms_example-1.png)
-
 Use `wrap_plots_split()` to display the list of plots across multiple
 pages (4 plots per page by default):
 
@@ -246,8 +244,6 @@ check_scatterplots(
 )[[1]]
 ```
 
-![](man/figures/README-check_scatterplots_example-1.png)
-
 ## Checking model assumptions
 
 ### lmer_assump_tests()
@@ -262,8 +258,6 @@ model <- lme4::lmer(SDMT ~ intervention + (1|pat_id), data = MS_trial_data, REML
 lmer_assump_tests(model)
 ```
 
-![](man/figures/README-lmer_assump_tests_example-1.png)
-
 `lmer_mult_assump_tests()` is a convenience wrapper that mirrors
 `lmer_mult()` and returns an assumption-check plot for every model in
 the batch.
@@ -277,8 +271,6 @@ plot for normality of residuals and linearity/homoscedasticity.
 model <- lm(SDMT ~ age, data = MS_trial_data)
 lm_assump_tests(model)
 ```
-
-![](man/figures/README-lm_assump_tests_example-1.png)
 
 `lm_mult_assump_tests()` is a convenience wrapper that mirrors
 `lm_mult()` and returns an assumption-check plot for every model in the
