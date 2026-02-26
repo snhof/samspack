@@ -242,7 +242,7 @@ check_scatterplots(
   data       = MS_trial_data,
   outcomes   = c("EDSS", "SDMT"),
   predictors = c("age", "time"),
-  id         = "pat_id"
+  id         = pat_id
 )[[1]]
 ```
 
