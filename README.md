@@ -274,7 +274,8 @@ the batch.
 plot for normality of residuals and linearity/homoscedasticity.
 
 ``` r
-lm(SDMT ~ age, data = MS_trial_data) |> lm_assump_tests()
+model <- lm(SDMT ~ age, data = MS_trial_data)
+lm_assump_tests(model)
 ```
 
 ![](man/figures/README-lm_assump_tests_example-1.png)
