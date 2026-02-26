@@ -225,7 +225,7 @@ Use `wrap_plots_split()` to display the list of plots across multiple
 pages (4 plots per page by default):
 
 ``` r
-check_histograms(data = MS_trial_data, id = pat_id) |> wrap_plots_split()
+check_histograms(data = MS_trial_data, id = pat_id) %>% wrap_plots_split()
 ```
 
 `histogram_sp()` creates a single histogram with the same annotations
