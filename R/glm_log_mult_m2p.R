@@ -40,7 +40,7 @@ glm_log_mult_m2p <- function(df_reg, exponentiate = TRUE, progress = FALSE) {
                   keep_empty = TRUE, names_sep = "_") %>%
     dplyr::select(-(dplyr::starts_with("std_model")&!dplyr::ends_with("estimate"))) %>%
     dplyr::rename_with(~stringr::str_remove(.x, "model_") %>% stringr::str_remove("result_")) %>%
-    dplyr::mutate(confint = asplit(confint, 1)) %>%
+    dplyr::mutate(confint = purrr::map(confint, unname)) %>%
     tidyr::unnest_wider(confint, names_sep = "_")%>%
     dplyr::mutate(conf.low = as.numeric(confint_1), conf.high = as.numeric(confint_2)) %>%
     dplyr::select(-c(confint_1, confint_2)) %>%
