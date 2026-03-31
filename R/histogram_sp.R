@@ -21,7 +21,7 @@
 #' facet_rows = INO
 #' )
 #'
-histogram_sp <- function(data, var, id = dplyr::row_number(), bins_method = "sturges", facet_cols = NA, facet_rows = NULL, max.overlaps = 20) {
+histogram_sp <- function(data, var, id = dplyr::row_number(), bins_method = "sturges", facet_cols = NULL, facet_rows = NULL, max.overlaps = 20) {
   gobj <- data %>%
     ggplot2::ggplot(ggplot2::aes(x = {{var}})) +
     #Histogram

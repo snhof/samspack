@@ -7,7 +7,7 @@
 histogram_sp(
   data,
   var,
-  id = NULL,
+  id = dplyr::row_number(),
   bins_method = "sturges",
   facet_cols = NULL,
   facet_rows = NULL,
