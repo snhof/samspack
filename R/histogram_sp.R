@@ -21,7 +21,7 @@
 #' facet_rows = INO
 #' )
 #'
-histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_cols = NULL, facet_rows = NULL, max.overlaps = 20) {
+histogram_sp <- function(data, var, id = dplyr::row_number(), bins_method = "sturges", facet_cols = NA, facet_rows = NULL, max.overlaps = 20) {
   gobj <- data %>%
     ggplot2::ggplot(ggplot2::aes(x = {{var}})) +
     #Histogram
@@ -90,11 +90,7 @@ histogram_sp <- function(data, var, id = NULL, bins_method = "sturges", facet_co
       data = data %>% dplyr::group_by({{ facet_rows }}, {{ facet_cols }}) %>%
         dplyr::mutate(
           # Create id labels for outliers
-          id = dplyr::case_when(
-            is_outlier({{var}}) == FALSE ~ "", # not an outlier, no label
-            is.null({{id}}) ~ as.character(dplyr::row_number()), # If outlier and no id variable provided, use row number
-            .default = {{id}} # if outlier, use provided id variable
-          )
+          id = dplyr::if_else(is_outlier({{var}}), as.character({{id}}), ""), # If outlier, use provided id variable, otherwise no label)
         ) %>% dplyr::ungroup(),
       y = -boxplot_width,
       size = 2,
