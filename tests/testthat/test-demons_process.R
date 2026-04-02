@@ -96,9 +96,24 @@ test_that("demons_process_prosac returns a dataframe with QC columns", {
 
 test_that("demons_process_prosac QC_T_numsac is TRUE when T_Number_saccades >= 30", {
   data <- make_prosac_data()
+  # Add a subject with too few saccades to test the FALSE case
+  data <- rbind(data, data.frame(
+    Research_number = "S004",
+    T_Number_saccades = 20L,
+    L_Number_saccades = 10L, L15_Number_saccades = 5L,
+    L15_VDI_AUC = 1.0, L15_SD_VDI_AUC = 0.05,
+    L15_VDI_PvAm = 0.9, L15_SD_VDI_PvAm = 0.04,
+    L15_VDI_peakvelocity = 1.0, L15_SD_VDI_peakvelocity = 0.1,
+    R_Number_saccades = 10L, R15_Number_saccades = 5L,
+    R15_VDI_AUC = 1.0, R15_SD_VDI_AUC = 0.05,
+    R15_VDI_PvAm = 0.9, R15_SD_VDI_PvAm = 0.04,
+    R15_VDI_peakvelocity = 1.0, R15_SD_VDI_peakvelocity = 0.1,
+    stringsAsFactors = FALSE
+  ))
   result <- demons_process_prosac(data)
-  expect_true(result$QC_T_numsac[1])   # 60 >= 30
-  expect_false(result$QC_T_numsac[3])  # 30 is not strictly > 30; 30 >= 30 is TRUE
+  expect_true(result$QC_T_numsac[1])   # 60 >= 30 → TRUE
+  expect_true(result$QC_T_numsac[3])   # 30 >= 30 → TRUE
+  expect_false(result$QC_T_numsac[4])  # 20 < 30 → FALSE
 })
 
 test_that("demons_process_prosac with add_prefix=TRUE prefixes non-id columns", {
