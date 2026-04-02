@@ -4,10 +4,12 @@
 \alias{lmer_assump_tests}
 \title{lmer_assump_tests: Generate plots for checking linear mixed model assumptions}
 \usage{
-lmer_assump_tests(model)
+lmer_assump_tests(model, id = dplyr::row_number())
 }
 \arguments{
 \item{model}{A linear mixed model object created with \code{lme4::lmer()}.}
+
+\item{id}{Variable used to label each outlier in the residuals histogram. Default is rownumber.}
 }
 \value{
 Plots for checking linear mixed model assumptions: a histogram of residuals for normality, a residuals vs fitted plot for linearity, and a scale-location plot for homoscedasticity.

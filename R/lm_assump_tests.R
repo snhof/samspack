@@ -3,6 +3,7 @@
 #' Generate plots for checking linear regression assumptions: normality of residuals, linearity, and homoscedasticity.
 #'
 #' @param model A linear model object created with \code{lm()}.
+#' @param id Variable used to label each outlier in the residuals histogram. Default is rownumber.
 #'
 #' @returns Plots for checking linear regression assumptions: a histogram of residuals for normality, a residuals vs fitted plot for linearity, and a scale-location plot for homoscedasticity.
 #' @export
@@ -12,7 +13,7 @@
 #' lm(SDMT ~ age, data = MS_trial_data) -> model
 #' lm_assump_tests(model)
 #'
-lm_assump_tests <- function(model) {
+lm_assump_tests <- function(model, id = dplyr::row_number()) {
   data <- broom::augment(model) %>%
     dplyr::mutate(
       residual_type = dplyr::case_when(
@@ -22,7 +23,7 @@ lm_assump_tests <- function(model) {
     )
 
   #Normality residuals
-  resid_histogram <- histogram_sp(data = data, var = .resid) +
+  resid_histogram <- histogram_sp(data = data, var = .resid, id = {{id}}) +
     ggplot2::labs(x="Residuals") +
     ggplot2::theme(
       legend.position="bottom",

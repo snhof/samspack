@@ -4,10 +4,12 @@
 \alias{lm_assump_tests}
 \title{lm_assump_tests: Generate plots for checking linear regression assumptions}
 \usage{
-lm_assump_tests(model)
+lm_assump_tests(model, id = dplyr::row_number())
 }
 \arguments{
 \item{model}{A linear model object created with \code{lm()}.}
+
+\item{id}{Variable used to label each outlier in the residuals histogram. Default is rownumber.}
 }
 \value{
 Plots for checking linear regression assumptions: a histogram of residuals for normality, a residuals vs fitted plot for linearity, and a scale-location plot for homoscedasticity.

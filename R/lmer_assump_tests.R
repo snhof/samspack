@@ -3,6 +3,7 @@
 #' Generate plots for checking linear mixed model assumptions: normality of residuals, linearity, and homoscedasticity.
 #'
 #' @param model A linear mixed model object created with \code{lme4::lmer()}.
+#' @param id Variable used to label each outlier in the residuals histogram. Default is rownumber.
 #'
 #' @returns Plots for checking linear mixed model assumptions: a histogram of residuals for normality, a residuals vs fitted plot for linearity, and a scale-location plot for homoscedasticity.
 #' @export
@@ -12,7 +13,7 @@
 #' model <- lme4::lmer(SDMT ~ intervention + (1|pat_id), data = MS_trial_data, REML = FALSE)
 #' lmer_assump_tests(model)
 #'
-lmer_assump_tests <- function(model) {
+lmer_assump_tests <- function(model, id = dplyr::row_number()) {
   data <- broom.mixed::augment(model) %>%
     dplyr::mutate(
       residual_type = dplyr::case_when(
@@ -22,7 +23,7 @@ lmer_assump_tests <- function(model) {
     )
 
   #Histogram for checking normality residuals
-  resid_histogram <- histogram_sp(data = data, var = .resid) +
+  resid_histogram <- histogram_sp(data = data, var = .resid, id = {{id}}) +
     ggplot2::labs(x="Residuals") +
     ggplot2::theme(
       legend.position="bottom",
