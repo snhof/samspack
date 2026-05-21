@@ -8,7 +8,7 @@ check_histograms(
   data,
   facet_rows = NULL,
   facet_cols = NULL,
-  id = NULL,
+  id = dplyr::row_number(),
   bins_method = "sturges"
 )
 }
