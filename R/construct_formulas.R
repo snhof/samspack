@@ -40,9 +40,15 @@ construct_formulas <- function(outcomes = NULL, predictors = NULL, covariates = 
       )
     )
 
+    # Expand all supplied vectors (outcomes/predictors/covariates/.../randoms) into every combination.
+    # `do.call()` is used so `...` terms can be passed as dynamic arguments to `expand_grid()`.
     df_grid <- do.call(tidyr::expand_grid, grid_inputs)
+    # Keep only the terms that come after `outcome ~ predictor`; these are appended to the formula RHS.
+    # `setdiff()` removes the fixed columns so this still works with any number of extra `...` arguments.
     suffix_cols <- setdiff(names(df_grid), c("outcome", "predictor"))
     formula_suffix <- if (length(suffix_cols) > 0) {
+      # Concatenate each row's remaining term columns (covariates, `...`, randoms) into one suffix string.
+      # `do.call(paste0, ...)` lets us paste an arbitrary number of columns without hard-coding names.
       do.call(paste0, df_grid[suffix_cols])
     } else {
       ""
