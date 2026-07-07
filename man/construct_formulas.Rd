@@ -8,6 +8,7 @@ construct_formulas(
   outcomes = NULL,
   predictors = NULL,
   covariates = "",
+  ...,
   randoms = "",
   formulas = NULL
 )
@@ -18,6 +19,8 @@ construct_formulas(
 \item{predictors}{a vector with predictors (independent variables), where the names of the variables are in quotes, e.g. \code{c("predictor1", "predictor2", "predictor3")}. It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. \code{c("predictor1", "fct_rev(predictor1)")}. It is also possible to specify interaction terms, e.g. \code{c("predictor1 * predictor2", "predictor2 * predictor 3")}.}
 
 \item{covariates}{a vector containing covariates (variables you want to correct for), where the entire enumeration of covariates are in quotes, different covariates in the same model are separated and preceded by a plus, e.g. \code{c("+ covariate 1 + covariate 2", "+ covariate2 + covariate3")}. If you want to run a model with and without covariates then specify it like this: \code{c("", "+ covariate 1 + covariate 2")}.}
+
+\item{...}{optional named vectors of additional formula terms. Each argument is expanded across all combinations, similar to \code{covariates}, and inserted after \code{covariates} and before \code{randoms} in the final formulas.}
 
 \item{randoms}{a vector containing random effects, where the entire enumeration of random effects are in quotes, different random effects in the same model are separated and preceded by a plus and notation from the lme4 package used, e.g. \code{c("+ (1|var1)", "+ (var2|var1)", "+ (1|var1/var3)", "+ (var2|var1) + (1|var1:var3)", "+ (var2|var1/var3)")}. If you want to run a model with and without random effects, specify it like this: \code{c("", "+ (1|var1)")}.}
 

@@ -6,6 +6,7 @@
 #' @param outcomes a vector with outcome variables (dependent variables), where the names of the outcome variables are in quotes, e.g. `c("outcome1", "outcome2", "outcome3")`. It is possible to specify log transformation of the outcome variables, e.g. `c("log(outcome1)", "log(outcome2)")`.
 #' @param predictors a vector with predictors (independent variables), where the names of the variables are in quotes, e.g. `c("predictor1", "predictor2", "predictor3")`. It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. `c("predictor1", "fct_rev(predictor1)")`. It is also possible to specify interaction terms, e.g. `c("predictor1 * predictor2", "predictor2 * predictor 3")`.
 #' @param covariates a vector containing covariates (variables you want to correct for), where the entire enumeration of covariates are in quotes, different covariates in the same model are separated and preceded by a plus, e.g. `c("+ covariate 1 + covariate 2", "+ covariate2 + covariate3")`. If you want to run a model with and without covariates then specify it like this: `c("", "+ covariate 1 + covariate 2")`.
+#' @param ... optional named vectors of additional formula terms. Each argument is expanded across all combinations, similar to `covariates`, and inserted after `covariates` and before `randoms` in the final formulas.
 #' @param randoms a vector containing random effects, where the entire enumeration of random effects are in quotes, different random effects in the same model are separated and preceded by a plus and notation from the lme4 package used, e.g. `c("+ (1|var1)", "+ (var2|var1)", "+ (1|var1/var3)", "+ (var2|var1) + (1|var1:var3)", "+ (var2|var1/var3)")`. If you want to run a model with and without random effects, specify it like this: `c("", "+ (1|var1)")`.
 #' @param formulas optional vector of formulas specified manually, e.g. `c("outcome1 ~ predictor1 + covariate1 + (1|var1)", "outcome2 ~ predictor2 + covariate2 + (1|var2)")`. You can combine this with using the other inputs for single variables, all models are then run.
 #'
@@ -22,17 +23,35 @@
 #' formulas = c("SDMT ~ intervention * age + (1|pat_id)")
 #' )
 #'
-construct_formulas <- function(outcomes = NULL, predictors = NULL, covariates = "", randoms = "", formulas = NULL) {
+construct_formulas <- function(outcomes = NULL, predictors = NULL, covariates = "", ..., randoms = "", formulas = NULL) {
+  extra_terms <- list(...)
+  extra_terms <- extra_terms[!vapply(extra_terms, is.null, logical(1))]
+
   if(!is.null(outcomes) & !is.null(predictors)){
-    #create data frame with regression formulas
-    dplyr::bind_rows(
-      tidyr::expand_grid(
+    grid_inputs <- c(
+      list(
         outcome = outcomes,
         predictor = predictors,
-        covariate = covariates,
+        covariate = covariates
+      ),
+      extra_terms,
+      list(
         random = randoms
-      ) %>%
-        dplyr::mutate(formula = paste0(paste(outcome, predictor, sep = " ~ "), covariate, random)) %>%
+      )
+    )
+
+    df_grid <- do.call(tidyr::expand_grid, grid_inputs)
+    suffix_cols <- setdiff(names(df_grid), c("outcome", "predictor"))
+    formula_suffix <- if (length(suffix_cols) > 0) {
+      do.call(paste0, df_grid[suffix_cols])
+    } else {
+      ""
+    }
+
+    #create data frame with regression formulas
+    dplyr::bind_rows(
+      df_grid %>%
+        dplyr::mutate(formula = paste0(paste(outcome, predictor, sep = " ~ "), formula_suffix)) %>%
         dplyr::select(dplyr::where(~ !(all(.=="")))),
 
       # add regressions defined by formula
