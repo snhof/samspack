@@ -39,6 +39,14 @@
 
 lmer_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
 
+  unnest_cols <- c("model_result", "model_error", "isSingular", "logLik", "deviance", "term_ranova", "npar_ranova", "p_ranova")
+  preferred_col_order <- c(
+    "model_type", "outcome", "predictor", "covariate", "random", "formula",
+    "effect", "group", "term", "estimate", "std.error", "statistic", "df",
+    "p.value", "conf.low", "conf.high", "isSingular", "logLik", "deviance",
+    "term_ranova", "npar_ranova", "p_ranova", "model", "model_error"
+  )
+
   df_reg %>%
     #calculating additional handy model parameters
     dplyr::mutate(
@@ -53,16 +61,22 @@ lmer_mult_m2p <- function(df_reg, exp_log = FALSE, progress = FALSE) {
     ) %>% dplyr::select(-ranova) %>%
 
     # unnest each model so all models form a single table
-    tidyr::unnest(col = c(model_result, model_error, isSingular, logLik, deviance, term_ranova, npar_ranova, p_ranova)) %>%
+    (\(x) {
+      cols_present <- intersect(unnest_cols, names(x))
+      if (length(cols_present) == 0) {
+        return(x)
+      }
+      tidyr::unnest(x, col = dplyr::any_of(cols_present), keep_empty = TRUE)
+    })() %>%
     dplyr::select(-dplyr::any_of(c('x'))) %>%
 
     # round all numeric columns
     dplyr::mutate(
       dplyr::across(dplyr::where(is.numeric), ~round(.x, digits = 5)),
       model_type = "Linear mixed model",
-      dplyr::across(c(estimate, conf.low, conf.high), ~dplyr::if_else(stringr::str_detect(outcome, "log\\(") & exp_log == TRUE, exp(.x), .x))
+      dplyr::across(dplyr::any_of(c("estimate", "conf.low", "conf.high")), ~dplyr::if_else(stringr::str_detect(outcome, "log\\(") & exp_log == TRUE, exp(.x), .x))
     ) %>%
-    dplyr::relocate(model_type, outcome, predictor, covariate, random, formula, effect, group, term, estimate, std.error, statistic, df, p.value, conf.low, conf.high, isSingular, logLik, deviance, term_ranova, npar_ranova, p_ranova, model, model_error)
+    dplyr::relocate(dplyr::any_of(preferred_col_order))
 }
 
 utils::globalVariables(c(
