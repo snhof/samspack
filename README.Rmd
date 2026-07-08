@@ -106,6 +106,7 @@ geeglm_log_mult(
 construct_formulas(
   outcomes   = c("EDSS", "SDMT"),
   predictors = "intervention",
+  interactions = c("", "* time"),
   covariates = c("", "+ age"),
   randoms    = c("", "+ (1|pat_id)")
 )
@@ -209,7 +210,7 @@ Below is a complete list of all exported functions grouped by category.
 
 | Function | Description |
 |---|---|
-| `construct_formulas()` | Build a data frame of all formula combinations from vectors of outcomes, predictors, covariates and random effects |
+| `construct_formulas()` | Build a data frame of all formula combinations from outcomes, predictors, optional extra term vectors (`...`) and random effects |
 | `lm_mult()` | Run multiple linear regression models (`lm`) and return a tidy results table |
 | `lmer_mult()` | Run multiple linear mixed-effects models (`lmer`) and return a tidy results table |
 | `glm_log_mult()` | Run multiple logistic regression models (`glm`, binomial) and return a tidy results table |

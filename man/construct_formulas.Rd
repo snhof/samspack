@@ -2,12 +2,11 @@
 % Please edit documentation in R/construct_formulas.R
 \name{construct_formulas}
 \alias{construct_formulas}
-\title{construct_formulas: Construct regression formulas from outcomes, predictors, covariates, random effects, and/or custom formulas}
+\title{construct_formulas: Construct regression formulas from outcomes, predictors, additional terms, random effects, and/or custom formulas}
 \usage{
 construct_formulas(
   outcomes = NULL,
   predictors = NULL,
-  covariates = "",
   ...,
   randoms = "",
   formulas = NULL
@@ -18,9 +17,7 @@ construct_formulas(
 
 \item{predictors}{a vector with predictors (independent variables), where the names of the variables are in quotes, e.g. \code{c("predictor1", "predictor2", "predictor3")}. It is possible to directly recode binary or categorical variables and get an output for both encodings, e.g. \code{c("predictor1", "fct_rev(predictor1)")}. It is also possible to specify interaction terms, e.g. \code{c("predictor1 * predictor2", "predictor2 * predictor 3")}.}
 
-\item{covariates}{a vector containing covariates (variables you want to correct for), where the entire enumeration of covariates are in quotes, different covariates in the same model are separated and preceded by a plus, e.g. \code{c("+ covariate 1 + covariate 2", "+ covariate2 + covariate3")}. If you want to run a model with and without covariates then specify it like this: \code{c("", "+ covariate 1 + covariate 2")}.}
-
-\item{...}{optional named vectors of additional formula terms. Each argument is expanded across all combinations, similar to \code{covariates}, and inserted after \code{covariates} and before \code{randoms} in the final formulas.}
+\item{...}{optional named vectors of additional formula terms, e.g. \code{covariates = c("", "+ age")} or \code{interactions = c("", "* time")}. All arguments in \code{...} are expanded across all combinations and inserted between \code{predictors} and \code{randoms} in the final formulas, in the order provided.}
 
 \item{randoms}{a vector containing random effects, where the entire enumeration of random effects are in quotes, different random effects in the same model are separated and preceded by a plus and notation from the lme4 package used, e.g. \code{c("+ (1|var1)", "+ (var2|var1)", "+ (1|var1/var3)", "+ (var2|var1) + (1|var1:var3)", "+ (var2|var1/var3)")}. If you want to run a model with and without random effects, specify it like this: \code{c("", "+ (1|var1)")}.}
 
@@ -30,7 +27,7 @@ construct_formulas(
 Data frame with a column 'formula' containing all constructed regression formulas.
 }
 \description{
-Construct a data frame of regression formulas based on all combinations of specified outcomes, predictors, covariates, random effects, and/or custom formulas.
+Construct a data frame of regression formulas based on all combinations of specified outcomes, predictors, additional terms (via \code{...}), random effects, and/or custom formulas.
 These formulas can be used in regression functions like \code{\link[=lm]{lm()}}, \code{\link[=lm_mult]{lm_mult()}}, \code{\link[lme4:lmer]{lme4::lmer()}}, \code{\link[=lmer_mult]{lmer_mult()}}, \code{\link[=glm]{glm()}}, \code{\link[=glm_log_mult]{glm_log_mult()}}, \code{\link[geepack:geeglm]{geepack::geeglm()}}, and \code{\link[=geeglm_log_mult]{geeglm_log_mult()}}.
 }
 \examples{
@@ -38,6 +35,7 @@ These formulas can be used in regression functions like \code{\link[=lm]{lm()}},
 construct_formulas(
 outcomes = c("EDSS", "SDMT", "log(SDMT)"),
 predictors = c("intervention", "intervention * time"),
+interactions = c("", " * time"),
 covariates = c("", " + age", "+ age + gender", "+ age + forcats::fct_rev(gender)"),
 randoms = c("", " + (1|pat_id)"),
 formulas = c("SDMT ~ intervention * age + (1|pat_id)")

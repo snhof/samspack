@@ -188,20 +188,20 @@ with base R model functions.
 construct_formulas(
   outcomes   = c("EDSS", "SDMT"),
   predictors = "intervention",
+  interactions = c("", "* time"),
   covariates = c("", "+ age"),
   randoms    = c("", "+ (1|pat_id)")
 )
-#> # A tibble: 8 × 5
-#>   outcome predictor    covariate random         formula                         
-#>   <chr>   <chr>        <chr>     <chr>          <chr>                           
-#> 1 EDSS    intervention ""        ""             EDSS ~ intervention             
-#> 2 EDSS    intervention ""        "+ (1|pat_id)" EDSS ~ intervention+ (1|pat_id) 
-#> 3 EDSS    intervention "+ age"   ""             EDSS ~ intervention+ age        
-#> 4 EDSS    intervention "+ age"   "+ (1|pat_id)" EDSS ~ intervention+ age+ (1|pa…
-#> 5 SDMT    intervention ""        ""             SDMT ~ intervention             
-#> 6 SDMT    intervention ""        "+ (1|pat_id)" SDMT ~ intervention+ (1|pat_id) 
-#> 7 SDMT    intervention "+ age"   ""             SDMT ~ intervention+ age        
-#> 8 SDMT    intervention "+ age"   "+ (1|pat_id)" SDMT ~ intervention+ age+ (1|pa…
+#> # A tibble: 16 × 6
+#>   outcome predictor    interactions covariates random         formula           
+#>   <chr>   <chr>        <chr>        <chr>      <chr>          <chr>             
+#> 1 EDSS    intervention ""           ""         ""             EDSS ~ interven…
+#> 2 EDSS    intervention ""           ""         "+ (1|pat_id)" EDSS ~ interven…
+#> 3 EDSS    intervention ""           "+ age"    ""             EDSS ~ interven…
+#> 4 EDSS    intervention ""           "+ age"    "+ (1|pat_id)" EDSS ~ interven…
+#> 5 EDSS    intervention "* time"     ""         ""             EDSS ~ interven…
+#> 6 EDSS    intervention "* time"     ""         "+ (1|pat_id)" EDSS ~ interven…
+#> # ℹ 10 more rows
 ```
 
 ## DEMoNS eye-tracking data processing
@@ -359,7 +359,7 @@ Below is a complete list of all exported functions grouped by category.
 
 | Function | Description |
 |----|----|
-| `construct_formulas()` | Build a data frame of all formula combinations from vectors of outcomes, predictors, covariates and random effects |
+| `construct_formulas()` | Build a data frame of all formula combinations from outcomes, predictors, optional extra term vectors (`...`) and random effects |
 | `lm_mult()` | Run multiple linear regression models (`lm`) and return a tidy results table |
 | `lmer_mult()` | Run multiple linear mixed-effects models (`lmer`) and return a tidy results table |
 | `glm_log_mult()` | Run multiple logistic regression models (`glm`, binomial) and return a tidy results table |
