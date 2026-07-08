@@ -24,6 +24,10 @@ geeglm_log_mult <- function(data, outcomes, predictors, covariates="", formulas 
   #create data frame with regression formulas
   df_formulas <- construct_formulas(outcomes = outcomes, predictors = predictors, covariates = covariates, formulas = formulas, randoms = "")
 
+  if (!id %in% names(data)) {
+    stop("Column specified in 'id' was not found in 'data'.")
+  }
+
   df_formulas %>%
     dplyr::mutate(formula=paste0(paste(outcome, predictor, sep = "~"), covariates)) %>%
 
@@ -31,7 +35,20 @@ geeglm_log_mult <- function(data, outcomes, predictors, covariates="", formulas 
     dplyr::mutate(
       model = purrr::map(
         formula,
-        .f = ~geepack::geeglm(formula = as.formula(.x), data = data, id = eval(as.symbol(id)), family = binomial, corstr = corstr),
+        .f = ~{
+          model_formula <- as.formula(.x)
+          model_vars <- unique(c(all.vars(model_formula), id))
+          complete_rows <- stats::complete.cases(data[, model_vars, drop = FALSE])
+          model_data <- data[complete_rows, , drop = FALSE]
+
+          geepack::geeglm(
+            formula = model_formula,
+            data = model_data,
+            id = model_data[[id]],
+            family = binomial,
+            corstr = corstr
+          )
+        },
         .progress = ifelse(progress, "Running logistic GEE regressions", FALSE)
       ) %>%
         purrr::map(.f = ~broom::tidy(.x, exponentiate = exponentiate, conf.int = TRUE))
