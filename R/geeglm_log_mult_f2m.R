@@ -6,7 +6,7 @@
 #' @inheritParams lm_mult_f2m
 #' @param df_formulas Dataframe created with [construct_formulas()] containing formulas for regression analyses.
 #' @param data data frame in long format with a row for every observation of the outcome variables. See [MS_trial_data] for an example dataset.
-#' @param id Variable used to identify each participant, e.g. pat_id.
+#' @param id Variable used to identify each participant, e.g. pat_id. Internally coerced to a factor for model fitting.
 #' @param corstr The correlation structure for your GEE analysis. Default is "echangeable". See ?geeglm [geepack::geeglm()] for more information.
 #'
 #' @returns Dataframe provided as "df_formulas" with appended columns containing logistic GEE models and error messages.
@@ -38,6 +38,7 @@ geeglm_log_mult_f2m <- function(df_formulas, data, id, corstr = "exchangeable", 
             model_vars <- unique(c(all.vars(model_formula), id))
             complete_rows <- stats::complete.cases(data[, model_vars, drop = FALSE])
             model_data <- data[complete_rows, , drop = FALSE]
+            model_data[[id]] <- as.factor(model_data[[id]])
 
             geepack::geeglm(
               formula = model_formula,

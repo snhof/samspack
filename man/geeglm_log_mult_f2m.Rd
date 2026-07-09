@@ -18,7 +18,7 @@ geeglm_log_mult_f2m(
 
 \item{data}{data frame in long format with a row for every observation of the outcome variables. See \link{MS_trial_data} for an example dataset.}
 
-\item{id}{Variable used to identify each participant, e.g. pat_id.}
+\item{id}{Variable used to identify each participant, e.g. pat_id. Internally coerced to a factor for model fitting.}
 
 \item{corstr}{The correlation structure for your GEE analysis. Default is "echangeable". See ?geeglm \code{\link[geepack:geeglm]{geepack::geeglm()}} for more information.}
 
